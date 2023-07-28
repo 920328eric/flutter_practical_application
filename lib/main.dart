@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 void main() => runApp(MaterialApp(
-      home: HomePagecard(),
+      home: HomePageinputtext(),
     ));
 
 class HomePagecubes extends StatelessWidget {
@@ -11,7 +11,7 @@ class HomePagecubes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MyApp Demo'),
+        title: const Text('MyApp Demo'),
       ),
       body: Row(
         children: <Widget>[
@@ -33,7 +33,7 @@ class HomePagecubes extends StatelessWidget {
             height: 100.0,
           ),
           Container(
-            margin: EdgeInsets.only(left: 10.0),
+            margin: const EdgeInsets.only(left: 10.0),
             color: Colors.blue,
             width: 100.0,
             height: 100.0,
@@ -54,12 +54,12 @@ class HomePage2State extends State<HomePagechagecolorcubes> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.forward),
+          child: const Icon(Icons.forward),
           onPressed: () {
             setState(() {});
           }),
       appBar: AppBar(
-        title: Text('MyApp Demo'),
+        title: const Text('MyApp Demo'),
       ),
       body: Row(
         children: <Widget>[
@@ -69,7 +69,7 @@ class HomePage2State extends State<HomePagechagecolorcubes> {
             height: 100.0,
           ),
           Container(
-            margin: EdgeInsets.only(left: 10.0),
+            margin: const EdgeInsets.only(left: 10.0),
             color: getColor(),
             width: 100.0,
             height: 100.0,
@@ -90,11 +90,11 @@ class HomePagtextincube extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('MyApp Demo'),
+          title: const Text('MyApp Demo'),
         ),
         body: Container(
-          margin: EdgeInsets.all(30.0),
-          padding: EdgeInsets.all(30.0),
+          margin: const EdgeInsets.all(30.0),
+          padding: const EdgeInsets.all(30.0),
           decoration: const BoxDecoration(
             color: Colors.black12,
             shape: BoxShape.circle,
@@ -120,7 +120,7 @@ class HomePagecard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('MyApp Demo'),
+          title: const Text('MyApp Demo'),
         ),
         body: const SizedBox(
           width: 100.0,
@@ -132,5 +132,49 @@ class HomePagecard extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class HomePageinputtext extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController controller = TextEditingController();
+    //為了讓外部event也可以取得TextFiel的文字
+
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('TextField Demo'),
+        ),
+        body: TextField(
+          controller: controller,
+          // onChanged: (text){
+          //   print('onChanged');
+          //   print(text);
+          // },
+          onEditingComplete: () {
+            print('onEditingComplete');
+            print(controller.text);
+          },
+          // onSubmitted: (text){
+          //   print('onSubmitted');
+          //   print(text);
+          // },
+          decoration: InputDecoration(
+              icon: const Icon(Icons.calendar_today),
+              labelText: '日期',
+              //suffix: Icon(Icons.close), //focus才會出現
+              //suffixIcon: Icon(Icons.remove),
+              focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.greenAccent)),
+              helperText: '日期格式: YYYY/MM/DD',
+              hintText: '輸入位置',
+              suffix: IconButton(
+                  onPressed: () {
+                    FocusScope.of(context).requestFocus(FocusNode());//讓鍵盤可以收起，專換focus達到此效果
+                  },
+                  icon: const Icon(Icons.close))
+            ),
+        )
+      );
   }
 }
