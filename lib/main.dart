@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'dart:math';
 
+import 'package:flutter/rendering.dart';
+
 void main() => runApp(MaterialApp(
-      home: HomePageinputtext(),
+      home: HomePageimage(),
     ));
 
 class HomePagecubes extends StatelessWidget {
@@ -170,11 +172,66 @@ class HomePageinputtext extends StatelessWidget {
               hintText: '輸入位置',
               suffix: IconButton(
                   onPressed: () {
-                    FocusScope.of(context).requestFocus(FocusNode());//讓鍵盤可以收起，專換focus達到此效果
+                    FocusScope.of(context)
+                        .requestFocus(FocusNode()); //讓鍵盤可以收起，專換focus達到此效果
                   },
-                  icon: const Icon(Icons.close))
-            ),
+                  icon: const Icon(Icons.close))),
+        ));
+  }
+}
+
+class HomePagelistview extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('MyApp Demo'),
+        ),
+        body: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            //動態產生,scroll的時候才會產生新的
+            return Card(
+              child: Container(
+                height: 150,
+                color: Colors.yellowAccent,
+                child: Text('$index'),
+              ),
+            );
+          },
         )
-      );
+        // (
+        //     children: List.generate(10, (index){//需要設定數量
+        //     return Card(child: Container(
+        //       height: 150,
+        //       color: Colors.greenAccent,
+        //       child: Text('$index'),
+        //     ),
+        //   );
+        //   }
+        // ),
+        // )
+        );
+  }
+}
+
+class HomePageimage extends StatelessWidget {
+  final String bannerimg =
+      'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Projects/Outlet/Amazon_OutletDeals_Desktop_TW.jpg';
+  @override
+  Widget build(BuildContext context) {
+    debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('MyApp Demo'),
+      ),
+      body: Image.asset('lib/images/loyalty.jpg')
+      // Image.network(
+      //   bannerimg,
+      //   height: 100.0,
+      //   alignment: Alignment.bottomCenter,
+      //   //fit: BoxFit.cover,
+      // ), //Image.network是一個box，裡面再跑NetworkImage
+    );
   }
 }
