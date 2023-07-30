@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:flutter/rendering.dart';
+//debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
 
 void main() => runApp(MaterialApp(
       home: changscreenMyApp(),
