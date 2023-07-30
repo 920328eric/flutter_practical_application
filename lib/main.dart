@@ -5,8 +5,21 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 
 void main() => runApp(MaterialApp(
-      home: HomePageimage(),
+      home: changscreenMyApp(),
     ));
+
+//statefulwidget 模板
+// class MyApp extends StatefulWidget {
+//   @override
+//   _MAppState createState() => _MAppState();
+// }
+//
+// class _MAppState extends State<MyApp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
 
 class HomePagecubes extends StatelessWidget {
   @override
@@ -200,7 +213,7 @@ class HomePagelistview extends StatelessWidget {
             );
           },
         )
-        // (
+        // ListView(
         //     children: List.generate(10, (index){//需要設定數量
         //     return Card(child: Container(
         //       height: 150,
@@ -225,7 +238,7 @@ class HomePageimage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('MyApp Demo'),
       ),
-      body: Image.asset('lib/images/loyalty.jpg')
+      body: Image.asset('lib/images/loyalty.jpg'),
       // Image.network(
       //   bannerimg,
       //   height: 100.0,
@@ -235,3 +248,106 @@ class HomePageimage extends StatelessWidget {
     );
   }
 }
+
+class HomePagegridview extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('MyApp Demo'),
+        ),
+        body:
+            // GridView.count(
+            //   // scrollDirection: ,//調整排列方向，預設直向
+            //   crossAxisCount: 2,//決定寬度(幾個方塊)
+            //   childAspectRatio: 2/3,//只能調整寬長比，寬是固定的
+            //   children: List.generate(100, (index) {
+            //     return Card(
+            //         child: Container(
+            //           color: Colors.green,
+            //           child: Text('Index:$index'),
+            //     )
+            //   );
+            //   }),
+            // )
+            GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  //調整寬度
+                  maxCrossAxisExtent: 400,
+                  // childAspectRatio: 2/3,
+                ),
+                // const SliverGridDelegateWithFixedCrossAxisCount(
+                //   crossAxisCount: 2,
+                //   childAspectRatio: 2/3,
+                //   ),
+                itemBuilder: (context, index) {
+                  return Card(
+                      child: Container(
+                    color: Colors.green,
+                    child: Text('Index:$index'),
+                  ));
+                }));
+  }
+}
+
+
+class changscreenMyApp extends StatefulWidget {//點擊icon畫面切換
+  @override
+  _MAppState createState() => _MAppState();
+}
+
+class _MAppState extends State<changscreenMyApp> {//點擊icon畫面切換
+  int index = 0;
+  List<Widget> pages = [
+    Container(color: Colors.red),
+    Container(color: Colors.yellow,),
+    Container(color: Colors.blue,),
+    Container(color: Colors.green,),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('MyApp Demo'),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: index,
+        onTap: (int idx){
+          setState(() {
+            index = idx;
+          });
+        },
+        items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add,color: Colors.black87,), 
+          label: 'Add',
+          ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle,color: Colors.black87,), 
+          label: 'Account'
+          ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.close,color: Colors.black87,), 
+          label: 'Close'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.build,color: Colors.black87,),
+          label: 'Build'),
+      ],
+       selectedLabelStyle:  const TextStyle ( // 選中狀態下
+        color: Colors.blue,
+        fontSize: 20, 
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: const TextStyle( // 未選中狀態下
+        color: Colors.grey, 
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+      ),
+      ),
+      body: pages[index],
+    );
+  }
+}
+
+
