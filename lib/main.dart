@@ -64,6 +64,8 @@ class HomePagecubes extends StatelessWidget {
   }
 }
 
+//-------------------------------------
+//按按鈕隨機切換顏色
 class HomePagechagecolorcubes extends StatefulWidget {
   @override
   HomePage2State createState() => HomePage2State();
@@ -104,6 +106,8 @@ class HomePage2State extends State<HomePagechagecolorcubes> {
         Random().nextInt(255));
   }
 }
+//-------------------------------------
+
 
 class HomePagtextincube extends StatelessWidget {
   @override
@@ -295,7 +299,8 @@ class HomePagegridview extends StatelessWidget {
   }
 }
 
-
+//--------------------------------------------
+//點選底下icon做畫面切換
 class changscreenMyApp extends StatefulWidget {//點擊icon畫面切換
   @override
   _MAppState createState() => _MAppState();
@@ -354,8 +359,12 @@ class _MAppState extends State<changscreenMyApp> {//點擊icon畫面切換
     );
   }
 }
+//--------------------------------------------
 
 
+
+//----------------------------------------------------------
+//從 Page2 返回時，Page1 中的 _displayText 變數將更新為 Page2 返回的值
 class MyAppchangepage extends StatefulWidget {
   @override
   _MApp2State createState() => _MApp2State();
@@ -406,3 +415,4 @@ class Page2 extends StatelessWidget {
     );
   }
 }
+//---------------------------------------------------
