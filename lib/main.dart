@@ -5,13 +5,25 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 //debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
 
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
 void main() => runApp(MaterialApp(
-      initialRoute: '/',//從根開始
-      routes: {
-      '/': (context){return  MyAppchangepage();},
-      '/page2': (context){return Page2();}},
-      
+      home: Myhomeapi(),
     ));
+
+
+//--------------------------------------------------
+//切換頁面
+// void main() => runApp(MaterialApp(
+//       initialRoute: '/',//從根開始
+//       routes: {
+//       '/': (context){return  MyAppchangepage();},
+//       '/page2': (context){return Page2();}},
+      
+//     ));
+//--------------------------------------
 
 //statefulwidget 模板
 // class MyApp extends StatefulWidget {
@@ -416,3 +428,80 @@ class Page2 extends StatelessWidget {
   }
 }
 //---------------------------------------------------
+
+
+//----------------------------------------------------------
+//運用api,和Http網路連接
+class Myhomeapi extends StatefulWidget {
+  @override
+  _MhomeapiState createState() => _MhomeapiState();
+}
+
+class _MhomeapiState extends State<Myhomeapi> {
+  final String host = 'https://jsonplaceholder.typicode.com/posts';
+  List datas=[];
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  // getData()async{
+  //   var response = await http.get(Uri.parse(host));
+  //   print(response.body);
+  // }
+
+  getData(){
+    http.get(Uri.parse(host)).then((response){
+      setState(() {
+        datas = jsonDecode(response.body);
+      });
+      //print(datas.length);
+    });
+  }
+
+  // getData(){
+  //   return http.get(Uri.parse(host));
+  // }
+
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Http+FutterBuilder'),
+      ),
+      // body: 
+      // FutureBuilder(
+      //   future: getData(),
+      //   builder: (context,snap){
+      //   if(!snap.hasData){
+      //     return Container();
+      //   }
+
+      //   List datas = jsonDecode(snap.data?.body);
+
+      //   return ListView.builder(
+      //   itemCount: datas.length,
+      //   itemBuilder: (context,idx){
+      //     var data = datas[idx];
+      //     return ListTile(
+      //       title: Text(data['title']),
+      //       subtitle: Text(data['body']),
+      //       );
+      //   },
+      // );
+      // }),
+      body: ListView.builder(
+        itemCount: datas.length,
+        itemBuilder: (context,idx){
+          var data = datas[idx];
+          return ListTile(
+            title: Text(data['title']),
+            subtitle: Text(data['body']),
+            );
+        },
+      )
+    );
+  }
+}
