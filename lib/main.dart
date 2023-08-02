@@ -6,7 +6,11 @@ import 'package:flutter/rendering.dart';
 //debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
 
 void main() => runApp(MaterialApp(
-      home: changscreenMyApp(),
+      initialRoute: '/',//從根開始
+      routes: {
+      '/': (context){return  MyAppchangepage();},
+      '/page2': (context){return Page2();}},
+      
     ));
 
 //statefulwidget 模板
@@ -352,3 +356,53 @@ class _MAppState extends State<changscreenMyApp> {//點擊icon畫面切換
 }
 
 
+class MyAppchangepage extends StatefulWidget {
+  @override
+  _MApp2State createState() => _MApp2State();
+}
+
+class _MApp2State extends State<MyAppchangepage> {
+  // 全局變數用來存儲要顯示在body中的值
+  String _displayText = '';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Page1'),),
+      body: Container(
+        color: Colors.red,
+        child: Text(_displayText),),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        // Navigator.pushNamed(context, '/page2');
+        
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context){
+            return Page2(textData: _displayText);
+        })).then((value){
+            // 接收從 Page2 返回的 value
+            setState(() {
+            _displayText = value ?? ''; // 如果 value 為 null，則設置為空字符串
+        });
+      });
+    }));
+  }
+}
+class Page2 extends StatelessWidget {
+  final String? textData;//安全性null修正: String 要?//被聲明為選擇性的
+  Page2({Key? key,@required this.textData}):super(key: key);//安全性null修正: Key 要?
+  //key 參數是選擇性的// textData 參數使用了 @required 註釋，表示這個參數是必需的，不能是空值
+  //選擇性 Key 主要用於特殊情況，例如動態生成小部件列表時，可以將它們與特定的 Key 關聯
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Page2'),),
+      body: SizedBox.expand(child: Container(
+        color: Colors.green,
+        child: Text('$textData'),//安全性null修正: $textData略過默認允許null
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.pop(context,'ppppppp');
+      },),
+    );
+  }
+}
