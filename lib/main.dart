@@ -5,23 +5,28 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 //debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;//因為要用http.get
 
-import 'dart:convert';
+import 'dart:convert';//因為要用json.decode,轉換資料格式
+
+import 'sqliteHelper.dart';//資料庫module
+
 
 void main() => runApp(MaterialApp(
-      home: Myhomeapi(),
+      home: MyAppsql(),
     ));
 
+// void main(){
+//   return runApp(MaterialApp());
+// }
 
-//--------------------------------------------------
 //切換頁面
+//--------------------------------------------------
 // void main() => runApp(MaterialApp(
 //       initialRoute: '/',//從根開始
 //       routes: {
 //       '/': (context){return  MyAppchangepage();},
 //       '/page2': (context){return Page2();}},
-      
 //     ));
 //--------------------------------------
 
@@ -30,11 +35,15 @@ void main() => runApp(MaterialApp(
 //   @override
 //   _MAppState createState() => _MAppState();
 // }
-//
 // class _MAppState extends State<MyApp> {
 //   @override
 //   Widget build(BuildContext context) {
-//     return Container();
+//     return  Scaffold(
+//       appBar: AppBar(
+//         title: Text(''),
+//       ),
+//       body: Container(),
+//     );
 //   }
 // }
 
@@ -76,13 +85,12 @@ class HomePagecubes extends StatelessWidget {
   }
 }
 
-//-------------------------------------
 //按按鈕隨機切換顏色
+//-------------------------------------
 class HomePagechagecolorcubes extends StatefulWidget {
   @override
   HomePage2State createState() => HomePage2State();
 }
-
 class HomePage2State extends State<HomePagechagecolorcubes> {
   @override
   Widget build(BuildContext context) {
@@ -431,7 +439,8 @@ class Page2 extends StatelessWidget {
 
 
 //----------------------------------------------------------
-//運用api,和Http網路連接
+//運用api,還有和Http網路連接
+//FutureBuilder不會用，不過還是能用出同樣的效果
 class Myhomeapi extends StatefulWidget {
   @override
   _MhomeapiState createState() => _MhomeapiState();
@@ -502,6 +511,71 @@ class _MhomeapiState extends State<Myhomeapi> {
             );
         },
       )
+    );
+  }
+}
+// -----------------------------------------------------
+
+
+//----------------------------------------------------
+//資料庫的使用
+class MyAppsql extends StatefulWidget {
+  @override
+  _MAppsqlState createState() => _MAppsqlState();
+}
+
+class _MAppsqlState extends State<MyAppsql> {
+  final String url = 'https://jsonplaceholder.typicode.com/posts';
+  final sqlhelp = SqliteHelper();
+
+  getallpost()async{
+    await sqlhelp.open();
+    return await sqlhelp.queryall();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //網路上抓資料寫進資料庫
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.http),
+        onPressed: ()async{
+          await sqlhelp.open();
+          var response = await http.get(Uri.parse(url));//因為是非同步，所以要加await
+          List datas = jsonDecode(response.body);//必須轉換格式
+          datas.forEach((element) async {
+            return await sqlhelp.insert(element);
+          });
+          // datas.forEach((element) async => sqlhelp.insert(element));
+          setState(() {
+            
+          });
+      }),
+      appBar: AppBar(
+        title: Text('Sqlite in flutter'),
+      ),
+      body: FutureBuilder(
+        //抓取資料庫的資料呈現出來
+        future: getallpost(),
+        builder: (context,snapshot){//AsyncSnapshot 是一個用於表示異步操作快照的物件
+          if(snapshot.hasData){
+            List datas = snapshot.data as List;
+            return ListView.builder(
+              itemCount: datas.length,
+              itemBuilder: (context,index){
+                return InkWell(
+                  onTap: ()async{//游標點下去就進行刪除
+                    await sqlhelp.delere(datas[index]['id']);
+                    setState(() {
+                      //資料更動後，記得更新畫面
+                    });
+                  },
+                  child:ListTile(
+                    title: Text(datas[index]['title']),),);
+            });
+          }
+          return Container();
+      }),
     );
   }
 }
