@@ -11,9 +11,11 @@ import 'dart:convert';//因為要用json.decode,轉換資料格式
 
 import 'sqliteHelper.dart';//資料庫module
 
+import 'cache_image.dart';//連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
+
 
 void main() => runApp(MaterialApp(
-      home: MyAppsql(),
+      home: HomePageimage(),
     ));
 
 // void main(){
@@ -46,6 +48,7 @@ void main() => runApp(MaterialApp(
 //     );
 //   }
 // }
+
 
 class HomePagecubes extends StatelessWidget {
   @override
@@ -517,7 +520,7 @@ class _MhomeapiState extends State<Myhomeapi> {
 // -----------------------------------------------------
 
 
-//----------------------------------------------------
+//-------------------------------------------------------------
 //資料庫的使用
 class MyAppsql extends StatefulWidget {
   @override
@@ -576,6 +579,21 @@ class _MAppsqlState extends State<MyAppsql> {
           }
           return Container();
       }),
+    );
+  }
+}
+//---------------------------------------------------------
+
+
+//---------------------------------------------------------
+//連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
+class MyAppnowifiimage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: CacheImage("https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Projects/Outlet/Amazon_OutletDeals_Desktop_TW.jpg"),
+      ),
     );
   }
 }
