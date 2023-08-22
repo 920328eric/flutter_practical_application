@@ -11,11 +11,18 @@ import 'dart:convert';//因為要用json.decode,轉換資料格式
 
 import 'sqliteHelper.dart';//資料庫module
 
-import 'cache_image.dart';//連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
 
+//連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
+import 'cache_image.dart';
+//自己寫的半殘版
+import 'package:cached_network_image/cached_network_image.dart';
+//官方的
+
+
+import 'package:video_player/video_player.dart';
 
 void main() => runApp(MaterialApp(
-      home: HomePageimage(),
+      home: MyAppnowifiimage(),
     ));
 
 // void main(){
@@ -587,14 +594,49 @@ class _MAppsqlState extends State<MyAppsql> {
 
 //---------------------------------------------------------
 //連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
+//自己寫的半殘版
 class MyAppnowifiimage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: CacheImage("https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Projects/Outlet/Amazon_OutletDeals_Desktop_TW.jpg"),
+        body: CacheImage("https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Projects/Outlet/Amazon_OutletDeals_Desktop_TW.jpg"  ),
       ),
     );
   }
 }
 //----------------------------------------------------------
+
+//---------------------------------------------------------
+//連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
+//官方的
+class MyAppnowifiimageofficial extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: CachedNetworkImage(imageUrl: 'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Projects/Outlet/Amazon_OutletDeals_Desktop_TW.jpg',
+        placeholder: (context,url) => new CircularProgressIndicator(),
+        errorWidget: (context,url,error) => new Icon(Icons.error)),
+        ),);
+  }
+}
+//----------------------------------------------------------
+
+//---------------------------------------------------------
+//影片撥放器
+class MyAppvideo extends StatefulWidget {
+  @override
+  _MAppvideoState createState() => _MAppvideoState();
+}
+class _MAppvideoState extends State<MyAppvideo> {
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: AppBar(
+        title: const Text('Video Player Demo'),
+      ),
+      body: Container(),
+    );
+  }
+}

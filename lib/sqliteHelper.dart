@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:sqflite/sqflite.dart';
 
 //設定資料庫一些資料

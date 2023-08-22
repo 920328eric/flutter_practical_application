@@ -39,6 +39,8 @@ dependencies:
   sqflite: ^2.3.0
   path_provider: any #可以直接取到documents的folder的位置
   dio: any #http的framework
+  cached_network_image: any 
+  video_player: any  #取得最新版本
 
 dev_dependencies:
   flutter_test:
