@@ -22,7 +22,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:video_player/video_player.dart';
 
 void main() => runApp(MaterialApp(
-      home: MyAppnowifiimage(),
+      home: MyAppvideo(),
     ));
 
 // void main(){
@@ -630,13 +630,73 @@ class MyAppvideo extends StatefulWidget {
   _MAppvideoState createState() => _MAppvideoState();
 }
 class _MAppvideoState extends State<MyAppvideo> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController=VideoPlayerController.networkUrl(
+        Uri.parse('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_5mb.mp4')
+      );
+      //因為回傳值是futrue builder，有無執行都是空值，所以使用stateful widget
+      _videoPlayerController.initialize().then((_){
+        setState(() {
+          
+        });
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
         title: const Text('Video Player Demo'),
       ),
-      body: Container(),
+      body: //_videoPlayerController.value.isInitialized?
+        AspectRatio( //控制影片比例
+          aspectRatio: 1280/720,//原影片比例
+          //_videoPlayerController.value.aspectRatio,//依據原始影片比例
+          child: 
+            //VideoPlayer(_videoPlayerController)//單純播放的框框
+
+            Stack(//把不同的widget疊在一起
+              children: <Widget>[
+                VideoPlayer(_videoPlayerController),
+                Positioned(
+                  bottom: 0,//放在底部，指定子部件相對於 Stack 底部的偏移量為 0
+                  child: Row(children: <Widget>[
+                    GestureDetector(
+                      child: const Icon(
+                        Icons.play_arrow,
+                        size: 40.0,
+                        color: Colors.black,),
+                      onTap: () {
+                        setState(() {
+                          _videoPlayerController.play();
+                        });
+                    },),//偵測滑鼠點到的位置
+                    GestureDetector(
+                      child: const Icon(
+                        Icons.pause,
+                        size: 40.0,
+                        color: Colors.black,),
+                      onTap: () {
+                        setState(() {
+                          _videoPlayerController.pause();
+                        });
+                    },)
+                  ],),)
+            ],)
+          )
+        //:Container(),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.play_arrow),
+      //   onPressed: (){
+      //     setState(() {
+      //       _videoPlayerController.play();
+      //     });
+      //   },
+      // ),
     );
   }
 }
