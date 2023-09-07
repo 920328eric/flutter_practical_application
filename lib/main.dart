@@ -21,6 +21,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:video_player/video_player.dart';
 
+//import 'package:provider/provider.dart'; //另外寫在flutter_provider_test
+
 void main() => runApp(MaterialApp(
       home: MyAppvideo(),
     ));
@@ -700,3 +702,11 @@ class _MAppvideoState extends State<MyAppvideo> {
     );
   }
 }
+//----------------------------------------------------------
+
+//---------------------------------------------------------
+//取得parent的資料，資料必須在同一棵樹裡
+//provider 提供只要在同一棵樹裡的widget都可以取得資料
+//另外寫在flutter_provider_test
+//----------------------------------------------------------
+
