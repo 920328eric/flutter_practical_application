@@ -23,8 +23,10 @@ import 'package:video_player/video_player.dart';
 
 //import 'package:provider/provider.dart'; //另外寫在flutter_provider_test
 
+import 'JSON_Serialize_module.dart';
+
 void main() => runApp(MaterialApp(
-      home: MyAppvideo(),
+      home: Myhomeapijson(),
     ));
 
 // void main(){
@@ -96,6 +98,7 @@ class HomePagecubes extends StatelessWidget {
     );
   }
 }
+
 
 //按按鈕隨機切換顏色
 //-------------------------------------
@@ -331,6 +334,7 @@ class HomePagegridview extends StatelessWidget {
   }
 }
 
+
 //--------------------------------------------
 //點選底下icon做畫面切換
 class changscreenMyApp extends StatefulWidget {//點擊icon畫面切換
@@ -394,7 +398,6 @@ class _MAppState extends State<changscreenMyApp> {//點擊icon畫面切換
 //--------------------------------------------
 
 
-
 //----------------------------------------------------------
 //從 Page2 返回時，Page1 中的 _displayText 變數將更新為 Page2 返回的值
 class MyAppchangepage extends StatefulWidget {
@@ -452,7 +455,7 @@ class Page2 extends StatelessWidget {
 
 //----------------------------------------------------------
 //運用api,還有和Http網路連接
-//FutureBuilder不會用，不過還是能用出同樣的效果
+//有兩種方法，//是FutureBuilder
 class Myhomeapi extends StatefulWidget {
   @override
   _MhomeapiState createState() => _MhomeapiState();
@@ -500,7 +503,8 @@ class _MhomeapiState extends State<Myhomeapi> {
       //     return Container();
       //   }
 
-      //   List datas = jsonDecode(snap.data?.body);
+      //   http.Response response = snap.data as http.Response;
+      //   List datas = jsonDecode(response.body);
 
       //   return ListView.builder(
       //   itemCount: datas.length,
@@ -609,6 +613,7 @@ class MyAppnowifiimage extends StatelessWidget {
 }
 //----------------------------------------------------------
 
+
 //---------------------------------------------------------
 //連接網路下載圖片，第二次開啟app時，不用網路也能看到圖片(有判斷是否已經下載過讀片)
 //官方的
@@ -624,6 +629,7 @@ class MyAppnowifiimageofficial extends StatelessWidget {
   }
 }
 //----------------------------------------------------------
+
 
 //---------------------------------------------------------
 //影片撥放器
@@ -704,9 +710,77 @@ class _MAppvideoState extends State<MyAppvideo> {
 }
 //----------------------------------------------------------
 
+
 //---------------------------------------------------------
 //取得parent的資料，資料必須在同一棵樹裡
 //provider 提供只要在同一棵樹裡的widget都可以取得資料
 //另外寫在flutter_provider_test
+//----------------------------------------------------------
+
+
+//---------------------------------------------------------
+//json序列化(JSON Serialize)(JSON物件化)
+//=>把json抓到的東西(list的map)變成獨立的一個class、物件
+//=>運用在api資料複雜度高
+//套用JSON_Serialize_module.dart這個自己寫的module
+//避免ListTile Text出現空值
+//不用記住key值(可能欄位很多，很多不同api)
+
+//更詳細的futerbuilder用法
+class Myhomeapijson extends StatefulWidget {
+  @override
+  _MhomeapijsonState createState() => _MhomeapijsonState();
+}
+
+class _MhomeapijsonState extends State<Myhomeapijson> {
+  final String host = 'https://jsonplaceholder.typicode.com/posts';
+  List datas=[];
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  
+  getData(){
+    return http.get(Uri.parse(host));
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Http+FutterBuilder'),
+      ),
+      body: 
+      FutureBuilder(
+        future: getData(),
+        builder: (context,snap){
+        
+        if(!snap.hasData){
+          return Container();
+        }
+        
+        http.Response response = snap.data as http.Response;
+        List datas = jsonDecode(response.body);
+        //把資料轉換成list，裡面有map物件(key-value的一種組合)
+
+        return ListView.builder(
+        itemCount: datas.length,
+        itemBuilder: (context,idx){
+          Post data =Post.fromMap(datas[idx]);//不須去記住key值
+          return ListTile(
+            //用key的方式取到資料
+            //Text裡面不能為空值
+            title: Text(data.title),
+            subtitle: Text(data.body),
+            );
+        },
+      );
+      }),
+    );
+  }
+}
 //----------------------------------------------------------
 
