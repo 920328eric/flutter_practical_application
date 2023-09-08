@@ -42,6 +42,8 @@ dependencies:
   cached_network_image: any 
   video_player: any  #取得最新版本
   provider: any
+  json_serializable: any
+  build_runner: any
 
 dev_dependencies:
   flutter_test:

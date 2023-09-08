@@ -23,10 +23,12 @@ import 'package:video_player/video_player.dart';
 
 //import 'package:provider/provider.dart'; //另外寫在flutter_provider_test
 
-import 'JSON_Serialize_module.dart';
+import 'JSON_Serialize_module_manual.dart';
+
+import 'serialize module/JSON_Serialize_module_Auto.dart';
 
 void main() => runApp(MaterialApp(
-      home: Myhomeapijson(),
+      home: Myhomeapijsonauto(),
     ));
 
 // void main(){
@@ -719,6 +721,7 @@ class _MAppvideoState extends State<MyAppvideo> {
 
 
 //---------------------------------------------------------
+// PART1 (手動)
 //json序列化(JSON Serialize)(JSON物件化)
 //=>把json抓到的東西(list的map)變成獨立的一個class、物件
 //=>運用在api資料複雜度高
@@ -727,12 +730,12 @@ class _MAppvideoState extends State<MyAppvideo> {
 //不用記住key值(可能欄位很多，很多不同api)
 
 //更詳細的futerbuilder用法
-class Myhomeapijson extends StatefulWidget {
+class Myhomeapijsonmanual extends StatefulWidget {
   @override
-  _MhomeapijsonState createState() => _MhomeapijsonState();
+  _MhomeapijsonmanualState createState() => _MhomeapijsonmanualState();
 }
 
-class _MhomeapijsonState extends State<Myhomeapijson> {
+class _MhomeapijsonmanualState extends State<Myhomeapijsonmanual> {
   final String host = 'https://jsonplaceholder.typicode.com/posts';
   List datas=[];
   @override
@@ -769,7 +772,7 @@ class _MhomeapijsonState extends State<Myhomeapijson> {
         return ListView.builder(
         itemCount: datas.length,
         itemBuilder: (context,idx){
-          Post data =Post.fromMap(datas[idx]);//不須去記住key值
+          Postmanual data =Postmanual.fromMap(datas[idx]);//不須去記住key值
           return ListTile(
             //用key的方式取到資料
             //Text裡面不能為空值
@@ -784,3 +787,69 @@ class _MhomeapijsonState extends State<Myhomeapijson> {
 }
 //----------------------------------------------------------
 
+
+//---------------------------------------------------------
+// PART2 (自動)
+//json序列化(JSON Serialize)
+class Myhomeapijsonauto extends StatefulWidget {
+  @override
+  _MhomeapijsonautoState createState() => _MhomeapijsonautoState();
+}
+
+class _MhomeapijsonautoState extends State<Myhomeapijsonauto> {
+  final String host = 'https://jsonplaceholder.typicode.com/posts';
+  List datas=[];
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  
+  getData(){
+    return http.get(Uri.parse(host));
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    getData();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Http+FutterBuilder'),
+      ),
+      body: 
+      FutureBuilder(
+        future: getData(),
+        builder: (context,snap){
+        
+        if(!snap.hasData){
+          return Container();
+        }
+        
+        http.Response response = snap.data as http.Response;
+        List datas = jsonDecode(response.body);
+        //把資料轉換成list，裡面有map物件(key-value的一種組合)
+
+        return ListView.builder(
+        itemCount: datas.length,
+        itemBuilder: (context,idx){
+          //----------------------------------------------------
+          //和上一個差在這裡(fromMap改成fromJson)
+          Post data =Post.fromJson(datas[idx]);//不須去記住key值
+          //----------------------------------------------------
+          return ListTile(
+            //用key的方式取到資料
+            //Text裡面不能為空值
+            title: Text(data.title),
+            subtitle: Text(data.body),
+            );
+        },
+      );
+      }),
+    );
+  }
+}
+//----------------------------------------------------------
+
+
+//---------------------------------------------------------

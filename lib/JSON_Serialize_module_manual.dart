@@ -1,4 +1,4 @@
-class Post{
+class Postmanual{
 
   //body、id 和 title 是非空（non-nullable）類型，
   //但在構造函數中沒有進行初始化，導致編譯器報錯。
@@ -11,9 +11,9 @@ class Post{
   late String body;
 
   //基本建構值
-  Post(this.userId,this.id,this.title,this.body);
+  Postmanual(this.userId,this.id,this.title,this.body);
   //仿map建構值
-  Post.fromMap(Map<String,dynamic> map){
+  Postmanual.fromMap(Map<String,dynamic> map){
     //?? 0 如果 'userId' 在 Map 中不存在或者其值為 null，
     //那麼 userId 將被設置為 0，否則它將被設置為 'userId' 在 Map 中的值。
     userId = map['userId']?? 0;
