@@ -5,6 +5,10 @@ import 'dart:math';
 import 'package:flutter/rendering.dart';
 //debugPaintSizeEnabled = true; //把隱藏的框架用虛線表示出來
 
+import 'package:flutter_application_1/BLOC/post_provider.dart';
+import 'package:flutter_application_1/post_detail.dart';
+
+
 import 'package:http/http.dart' as http;//因為要用http.get
 
 import 'dart:convert';//因為要用json.decode,轉換資料格式
@@ -27,9 +31,19 @@ import 'JSON_Serialize_module_manual.dart';
 
 import 'serialize module/JSON_Serialize_module_Auto.dart';
 
-void main() => runApp(MaterialApp(
-      home: Myhomeapijsonauto(),
-    ));
+import 'BLOC/post_bloc.dart';
+
+// void main() => runApp(MaterialApp(
+//       home: MyApptogglebutton(),
+//     ));
+
+
+//BLOC的PostProvider放在MaterialApp上面，讓所有的widget都可以使用
+void main() => runApp(
+    PostProvider(
+      child: MaterialApp(
+        home: MyhomeBLOC(),
+      )));
 
 // void main(){
 //   return runApp(MaterialApp());
@@ -853,3 +867,140 @@ class _MhomeapijsonautoState extends State<Myhomeapijsonauto> {
 
 
 //---------------------------------------------------------
+//togglebutton 用法
+class MyApptogglebutton extends StatefulWidget {
+  @override
+  _MApptogglebuttonState createState() => _MApptogglebuttonState();
+}
+class _MApptogglebuttonState extends State<MyApptogglebutton> {
+
+  List<String> toggleItem = [
+    '又來了',
+    '又去了',
+    '又壞了',
+    '又好了'
+  ]; 
+
+  List<bool> isSelected = [
+    false,
+    false,
+    false,
+    false
+  ];
+
+  String selectText = '';
+  
+  @override
+  Widget build(BuildContext context) {
+    return 
+    Scaffold(
+      appBar: AppBar(title: const Text('ToggleButtons'),),
+      body:
+      Column(children: <Widget>[
+        ToggleButtons(
+          selectedBorderColor: Colors.lightBlue,
+
+          isSelected: isSelected,
+          onPressed: (index){
+            isSelected[index] = isSelected[index]?false:true;
+            selectText = '';
+            //讓被選中的變為false，不被選中變true
+            for(int i=0;i < toggleItem.length;i++){
+              if(isSelected[i]) selectText = '$selectText${toggleItem[i]},';
+            }
+            setState(() {
+            
+            });
+          },
+
+          children: List.generate(toggleItem.length, (index){
+            return Text(toggleItem[index]);
+          }), 
+          ),
+          SelectableText(selectText)
+      ],)
+    );
+  }
+}
+//-----------------------------------------------------
+
+//---------------------------------------------------------
+//使用BLOC讓運作層和UI層分開(以JSON Serialize作範例)
+//InheritedWidget 使不同的檔案可以共用同樣的物件(以BLOC/post_provider.dart作範例)
+//把PostProvider放在MaterialApp上面，所有的widget都可以使用
+//同時在另一個檔案post_detail.dart也可使用
+class MyhomeBLOC extends StatefulWidget {
+  @override
+  _MhomeBLOCState createState() => _MhomeBLOCState();
+}
+
+class _MhomeBLOCState extends State<MyhomeBLOC> {
+  
+  PostBloc _postbloc = PostBloc();
+
+  List datas=[];
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  //是 State 對象的一個生命周期方法，它會在依賴的資料發生變化時被調用
+  //資料或設置發生變化時執行必要的操作，以確保界面的同步性
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _postbloc = PostProvider.of(context);
+  }
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Http+FutterBuilder'),
+      ),
+      body: 
+      FutureBuilder(
+        future: _postbloc.getData(),
+        builder: (context,snap){
+        
+        if(!snap.hasData){
+          return Container();
+        }
+        
+        http.Response response = snap.data as http.Response;
+        List datas = jsonDecode(response.body);
+        //把資料轉換成list，裡面有map物件(key-value的一種組合)
+
+        return ListView.builder(
+        itemCount: datas.length,
+        itemBuilder: (context,idx){
+          //----------------------------------------------------
+          //和上一個差在這裡(fromMap改成fromJson)
+          Post data =Post.fromJson(datas[idx]);//不須去記住key值
+          //----------------------------------------------------
+          return InkWell( //可以按下去的事件
+            onTap: (){//被按到的post存到bloc
+              _postbloc.selectedPost = data;
+              //存好就傳到post_detail.dart的畫面
+              
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PostDetail()));
+              //.push()這行程式碼的作用是在當前畫面之上打開一個新的畫面，
+              //新畫面的內容由 PostDetail 組件來定義。(MaterialPageRoute 來定義新的畫面。)
+              //當新畫面推送到導航堆疊中後，用戶可以在新畫面上進行操作，
+              //並且可以使用導航返回到前一個畫面。
+            },
+            child: ListTile(
+              //用key的方式取到資料
+              //Text裡面不能為空值
+              title: Text(data.title),
+              //subtitle: Text(data.body),
+            ));
+        },
+      );
+      }),
+    );
+  }
+}
