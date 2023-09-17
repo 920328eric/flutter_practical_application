@@ -929,6 +929,9 @@ class _MApptogglebuttonState extends State<MyApptogglebutton> {
 //InheritedWidget 使不同的檔案可以共用同樣的物件(以BLOC/post_provider.dart作範例)
 //把PostProvider放在MaterialApp上面，所有的widget都可以使用
 //同時在另一個檔案post_detail.dart也可使用
+//* 點擊標題，跳出另外一頁並顯示這個標題的內容(標題放到appbar上)
+//* post_detail.dart的畫面是點擊後跳出來的畫面
+//有用到BLOC folder(post_bloc.dart、post_provider.dart)和post_detail.dart
 class MyhomeBLOC extends StatefulWidget {
   @override
   _MhomeBLOCState createState() => _MhomeBLOCState();
