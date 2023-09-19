@@ -1007,3 +1007,11 @@ class _MhomeBLOCState extends State<MyhomeBLOC> {
     );
   }
 }
+
+
+//---------------------------------------------------------
+//bloc_pattern 狀態管理
+//另外寫在flutter_bloc_pattern_test
+//利用bloc_pattern(這個別人寫好的package)的blocProvider，讓不同的檔案可以共用同樣的物件
+//實現相同的值可以呈現在不同頁面
+//---------------------------------------------------------
