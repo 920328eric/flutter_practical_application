@@ -42,7 +42,7 @@ import 'BLOC/post_bloc.dart';
 void main() => runApp(
     PostProvider(
       child: MaterialApp(
-        home: MyhomeBLOC(),
+        home: HomePageimage(),
       )));
 
 // void main(){
@@ -298,13 +298,13 @@ class HomePageimage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('MyApp Demo'),
       ),
-      body: Image.asset('lib/images/loyalty.jpg'),
-      // Image.network(
-      //   bannerimg,
-      //   height: 100.0,
-      //   alignment: Alignment.bottomCenter,
-      //   //fit: BoxFit.cover,
-      // ), //Image.network是一個box，裡面再跑NetworkImage
+      // body: Image.asset('lib/images/loyalty.jpg'),
+      body: Image.network(
+        bannerimg,
+        height: 100.0,
+        alignment: Alignment.bottomCenter,
+        //fit: BoxFit.cover,
+      ), //Image.network是一個box，裡面再跑NetworkImage
     );
   }
 }
