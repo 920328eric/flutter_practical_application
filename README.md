@@ -1,6 +1,6 @@
 
-# 自動化爬取Pubmed上完整文獻，輸出pdf和txt檔
-需先到Pubmed搜尋引擎，搜尋想要爬取的文獻關鍵字，並勾選Free full text，最後下載 All results (Abstract text 格式)，把他們放到程式碼 input_data 裡
+# 各種 flutter 基礎練習
+使用的 IDE 為 VScode
 
 
 ## 使用說明
