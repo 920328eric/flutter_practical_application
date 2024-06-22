@@ -4,7 +4,7 @@
 
 
 ## 使用說明
-1. main_process 是主要執行的地方
+1. lib/main.dart 為程式碼放置的主要地方
 
 2. 在 target_file = "joint_pain.txt" ， 指定想讀取剛剛下載的Abstract text 格式的txt檔
 
