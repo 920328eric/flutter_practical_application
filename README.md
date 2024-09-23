@@ -1,5 +1,5 @@
 
-# 各種 flutter 基礎練習
+# 各種 flutter 實際應用
 使用的 IDE 為 VScode
 
 
